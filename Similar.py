@@ -243,8 +243,8 @@ for coluna in categorias:
   df_stats[coluna] = (abs(df_stats[coluna])/lista_valores[v])-1
   v += 1
 
-df_stats['Jogador'] = df_jogs['Jogador']
-df_stats['Equipe atual'] = df_jogs['Equipe atual']
+df_stats['Jogador'] = base_comp['Jogador']
+df_stats['Equipe atual'] = base_comp['Equipe atual']
 
 st.write(df_stats)
 
