@@ -231,9 +231,13 @@ st.pyplot(fig)
 cols_interesse = df_comp.columns.tolist()[1:]
 base_comp = base[cols_interesse].copy()
 
-df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual'])
+df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_index(drop=True)
 
 st.write(df_jogs)
+
+df_subtract = df_jogs[8:].subtract(lista_valores)
+
+st.write(df_subtract)
 
 v = 0
 for coluna in df_jogs.columns[8:]:
