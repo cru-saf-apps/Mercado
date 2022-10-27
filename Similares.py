@@ -3,15 +3,9 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-
-
-lista_anos = []
-for ano in range(2018,2022):
-  lista_anos.append(str(ano))
-  
-lista_ligas = ['BRA1','BRA2']
-
-base = pd.DataFrame() 
+@st.cache
+def baixar_base(lista_anos,lista_ligas):
+  base = pd.DataFrame() 
 
 for ano in lista_anos:
   for liga in lista_ligas:
@@ -22,8 +16,18 @@ for ano in lista_anos:
       df['Liga'] = liga
       base = base.append(df).drop_duplicates().reset_index(drop=True)
 
-base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano","Equipa":"Equipe atual"})
-base = base.reset_index(drop=True)
+  base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano","Equipa":"Equipe atual"})
+  base = base.reset_index(drop=True)
+  
+  return base
+
+lista_anos = []
+for ano in range(2018,2022):
+  lista_anos.append(str(ano))
+  
+lista_ligas = ['BRA1','BRA2']
+
+base = baixar_base(lista_anos,lista_ligas)
 
 
 vars_abs = ['Golos','Golos esperados','Assistências','Assistências esperadas','Cortes de carrinho ajust. à posse',
