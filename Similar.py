@@ -20,7 +20,7 @@ for ano in lista_anos:
       df = pd.read_csv(arquivo,sep=';',decimal=',')
       df['Ano'] = int(ano)
       df['Liga'] = liga
-      base = pd.concat(base,df).drop_duplicates().reset_index(drop=True)
+      base = pd.concat([base,df]).drop_duplicates().reset_index(drop=True)
 
 base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano","Equipa":"Equipe atual"})
 base = base.reset_index(drop=True)
