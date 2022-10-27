@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
-data_load_state = st.text('Baixando base de dados...')
 
 @st.cache
 def load_basews(lista_anos,lista_ligas):
@@ -21,8 +20,6 @@ def load_basews(lista_anos,lista_ligas):
   base = base.reset_index(drop=True)
   
   return base
-
-data_load_state.text("Download concluído")
 
 lista_anos = []
 for ano in range(2018,2022):
@@ -102,6 +99,7 @@ df = base1[(base1.Ano>=anos1[0])&(base1.Ano<=anos1[1])]
 
 st.write(df)
 
+
 st.subheader("Variáveis para comparação")
 vars = st.multiselect(label = 'Selecione as variáveis desejadas',options=df.columns[9:])
 lista_vars = ['ID','Jogador','Pé','Altura','Equipe atual','Equipe no ano','Liga','Posição','Idade']
@@ -111,6 +109,7 @@ for var in vars:
 df_comp = df[lista_vars].copy()
 
 st.write(df_comp)
+
 
 lista_ranges = []
 
