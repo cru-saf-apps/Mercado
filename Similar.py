@@ -236,23 +236,11 @@ df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_ind
 st.write(df_jogs)
 
 df_stats = df_jogs[df_jogs.columns.tolist()[8:]].copy().subtract(lista_valores)
+for coluna in categorias:
+  df_stats[coluna] = abs(df_stats[coluna])
+
+df_stats['Jogador'] = df_jogs['Jogador']
+df_stats['Equipe atual'] = df_jogs['Equipe atual']
 
 st.write(df_stats)
 
-v = 0
-for coluna in df_jogs.columns[8:]:
-  t = 0
-  lista_coluna = []
-  while t < len(df_jogs[coluna]):
-    result = abs(df_jogs[coluna][t] - lista_valores[v])/lista_valores[v]
-    
-    if 0 < result <= 0.05:
-      lista_coluna.append(1)
-    elif 0.05 < result <= 0.1:
-      lista_coluna.append(2)
-    else:
-      lista_coluna.append(3)
-      
-    t += 1
-  df_jogs[coluna] = lista_coluna
-  v += 1
