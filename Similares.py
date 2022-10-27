@@ -227,3 +227,6 @@ try:
  
   st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]))
   st.pyplot(fig)
+
+except:
+  st.write("Por favor selecione ao menos 2 variáveis de comparação")
