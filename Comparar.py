@@ -77,7 +77,10 @@ else:
     st.write("Tabela resumo do jogador desejado:")
     st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
 
-base1 = base1.assign(ID = 1)    
+try:
+  base1 = base1.assign(ID = 1)
+except:
+  st.write('...')
 
 st.subheader('Jogador 2')    
 nome_busca2 = st.text_input("Nome do segundo jogador:")
@@ -106,7 +109,10 @@ else:
     st.write("Tabela resumo do jogador desejado:")
     st.write(base2[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])    
 
-base2 = base2.assign(ID = 2)       
+try:
+  base2 = base2.assign(ID = 2)
+except:
+  st.write('...')      
 
 ano1min = int(np.nanmin(base1.Ano))
 ano1max = int(np.nanmax(base1.Ano))
