@@ -228,8 +228,17 @@ try:
 
   fig.legend()
  
-  st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]))
+  st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1])+")")
   st.pyplot(fig)
 
 except:
   st.write("Por favor selecione ao menos 2 variáveis de comparação")
+
+
+base_comp = base[columns=lista_vars]
+
+for row in df_comp.index:
+  base_comp = base_comp.drop(row,0)
+  
+st.write(len(base_comp),len(base))
+  
