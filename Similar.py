@@ -186,50 +186,47 @@ fig = plt.figure(figsize = (8,8))
 
 st.write(len(categorias),len(lista_ranges))
 
-try:
-  radar = ComplexRadar(fig,categorias,lista_ranges)
-except:
-  st.write("Por favor selecione ao menos 2 variáveis de comparação")
-  
-  nome = df_comp['Jogador'].tolist()[0]
-  if df_comp['Pé'].tolist()[0] == 'direito':
-    pe = 'Destro'
-  elif df_comp['Pé'].tolist()[0] == 'esquerdo':
-    pe = 'Canhoto'
-  elif df_comp['Pé'].tolist()[0] == 'ambos':
-    pe = 'Ambidestro'
+radar = ComplexRadar(fig,categorias,lista_ranges)
+
+nome = df_comp['Jogador'].tolist()[0]
+if df_comp['Pé'].tolist()[0] == 'direito':
+  pe = 'Destro'
+elif df_comp['Pé'].tolist()[0] == 'esquerdo':
+  pe = 'Canhoto'
+elif df_comp['Pé'].tolist()[0] == 'ambos':
+  pe = 'Ambidestro'
+else:
+  pe = 'Desconhecido'
+
+altura = df_comp['Altura'].tolist()[0]
+
+aux_df = df_comp.loc[:, df_comp.columns != 'Jogador']
+aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
+aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
+aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
+aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
+aux_df = aux_df.loc[:, aux_df.columns != 'ID']
+aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
+aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
+aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
+
+aux_df = aux_df.reset_index(drop=True)
+
+lista_valores = []
+
+for coluna in aux_df.columns:
+  if coluna in vars_abs:
+    lista_valores.append(aux_df[coluna].sum())
   else:
-    pe = 'Desconhecido'
+    lista_valores.append(aux_df[coluna].mean())
 
-  altura = df_comp['Altura'].tolist()[0]
-
-  aux_df = df_comp.loc[:, df_comp.columns != 'Jogador']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
-  aux_df = aux_df.loc[:, aux_df.columns != 'ID']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
-  aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
-
-  aux_df = aux_df.reset_index(drop=True)
-
-  lista_valores = []
-
-  for coluna in aux_df.columns:
-    if coluna in vars_abs:
-      lista_valores.append(aux_df[coluna].sum())
-    else:
-      lista_valores.append(aux_df[coluna].mean())
-
-  legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
-  radar.plot(lista_valores,label=legenda)
+legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
+radar.plot(lista_valores,label=legenda)
 
 
-  fig.legend()
- 
-  st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ")")
-  st.pyplot(fig)
+fig.legend()
+
+st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ")")
+st.pyplot(fig)
   
 
