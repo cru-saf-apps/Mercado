@@ -224,12 +224,12 @@ try:
 
   for coluna in aux_df.columns:
     if coluna in vars_abs:
-      lista_valores.append(aux_df[coluna].sum())
+      lista_valores_interesse.append(aux_df[coluna].sum())
     else:
-      lista_valores.append(aux_df[coluna].mean())
+      lista_valores_interesse.append(aux_df[coluna].mean())
 
   legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
-  radar.plot(lista_valores,label=legenda)
+  radar.plot(lista_valores_interesse,label=legenda)
 
 
   fig.legend()
@@ -304,6 +304,25 @@ while t < len(df_jogs):
 st.write(df_jogs)
       
   
+df_jogs = df_jogs.assign(ID = range(1,len(df_jogs)))
+
+
+for coluna in aux_df.columns[2:]:
+  lista_coluna = []
+  for jog in df_jogs.ID:
+    aux_df = df_jogs[df_jogs.ID == jog]
+    if abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0 and
+    abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.05:
+      lista_coluna.append(1)
+    elif abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0.05 and
+    abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.1:
+      lista_coluna.append(2)
+    else:
+      lista_coluna.append(3)
+      
+  df_jogs[coluna] = lista_coluna
+  
+st.write(df_jogs)
       
   
   
