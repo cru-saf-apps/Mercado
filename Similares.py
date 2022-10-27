@@ -260,9 +260,10 @@ for jogador in pd.unique(base_comp.Jogador):
 
 
 df_jogs = pd.DataFrame({'Jogador':lista_jogs,'Equipe atual':lista_equipes})
-colunas = df_jogs.columns.tolist()
-colunas.append(lista_vars[9:])
-df_jogs = df_jogs.reindex(columns=colunas)
+
+for coluna in lista_vars[9:]:
+  df_jogs[coluna] = ""
+
 st.write(df_jogs)
 
 '''t = 0
