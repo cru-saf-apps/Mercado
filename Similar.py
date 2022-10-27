@@ -237,7 +237,7 @@ df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_ind
 
 st.write(df_jogs)
 
-df_stats = df_jogs[df_jogs.columns.tolist()[8:]].copy().subtract(lista_valores)
+df_stats = base_comp[base_comp.columns.tolist()[8:]].copy().subtract(lista_valores)
 v = 0
 for coluna in categorias:
   df_stats[coluna] = (abs(df_stats[coluna])/lista_valores[v])-1
@@ -246,12 +246,7 @@ for coluna in categorias:
 df_stats['Jogador'] = df_jogs['Jogador']
 df_stats['Equipe atual'] = df_jogs['Equipe atual']
 
-
 df_stats = df_stats.assign(ID = range(1,len(df_stats)))
-
-for jog in df_stats.ID:
-  aux_df = base[df_stats.ID == jog]
-
 
 st.write(df_stats)
 
