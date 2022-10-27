@@ -235,7 +235,7 @@ except:
   st.write("Por favor selecione ao menos 2 variáveis de comparação")
 
 
-base_comp = base[[lista_vars]].copy()
+base_comp = base[lista_vars].copy()
 
 for row in df_comp.index:
   base_comp = base_comp.drop(row,0)
