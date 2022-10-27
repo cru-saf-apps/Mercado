@@ -239,7 +239,7 @@ v = 0
 for coluna in df_jogs.columns[8:]:
   t = 0
   lista_coluna = []
-  while t < len(coluna):
+  while t < len(df_jogs[coluna]):
     result = abs(df_jogs[coluna][t] - lista_valores[v])/lista_valores[v]
     
     if 0 < result <= 0.05:
