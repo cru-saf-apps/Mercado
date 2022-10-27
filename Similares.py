@@ -252,7 +252,7 @@ for jogador in pd.unique(base_comp.Jogador):
     t = 0
     while t < len(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual'])):
       lista_jogs.append(jogador)
-      lista_equipes.append(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual'][t]))
+      lista_equipes.append(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual'])[t])
       t += 1
   else:
     lista_jogs.append(jogador)
