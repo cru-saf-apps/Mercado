@@ -182,6 +182,8 @@ class ComplexRadar():
         
 categorias = lista_vars[9:]
 
+fig = plt.figure(figsize = (8,8))
+
 try:
   radar = ComplexRadar(fig,categorias,lista_ranges)
   
