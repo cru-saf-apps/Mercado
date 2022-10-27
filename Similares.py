@@ -311,11 +311,9 @@ for coluna in aux_df.columns[2:]:
   lista_coluna = []
   for jog in df_jogs.ID:
     aux_df = df_jogs[df_jogs.ID == jog]
-    if (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0) and
-    (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.05):
+    if (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0) and (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.05):
       lista_coluna.append(1)
-    elif (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0.05) and
-    (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.1):
+    elif (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] > 0.05) and (abs(aux_df[coluna].tolist()[0] - lista_valores_interesse[v])/lista_valores_interesse[v] <= 0.1):
       lista_coluna.append(2)
     else:
       lista_coluna.append(3)
