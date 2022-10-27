@@ -307,7 +307,7 @@ st.write(df_jogs)
 df_jogs = df_jogs.assign(ID = range(1,len(df_jogs)))
 
 
-for coluna in aux_df.columns[2:]:
+for coluna in df_jogs.columns[2:]:
   lista_coluna = []
   for jog in df_jogs.ID:
     aux_df = df_jogs[df_jogs.ID == jog]
