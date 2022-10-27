@@ -261,6 +261,7 @@ while t < len(df_jogs):
     somas = somas + soma
     
   df_final['Soma'][t] = somas
+  t += 1
   
 st.write(df_final)
     
