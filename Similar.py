@@ -81,3 +81,17 @@ try:
   base1 = base1.assign(ID = 1)
 except:
   st.write('...')
+  
+  
+ano1min = int(np.nanmin(base1.Ano))
+ano1max = int(np.nanmax(base1.Ano))
+
+if ano1min < ano1max:
+  anos1 = st.slider('Anos analisados para '+nome_busca1,ano1min, ano1max, (ano1min, ano1max))
+else:
+  st.write(nome_busca1 + " somente disponível em "+str(ano1min))
+  anos1 = [ano1min,ano1max]
+  
+df = base1[(base1.Ano>=anos1[0])&(base1.Ano<=anos1[1])]
+
+st.write(df)
