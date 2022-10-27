@@ -184,8 +184,6 @@ categorias = lista_vars[9:]
 
 fig = plt.figure(figsize = (8,8))
 
-st.write(len(categorias),len(lista_ranges))
-
 radar = ComplexRadar(fig,categorias,lista_ranges)
 
 nome = df_comp['Jogador'].tolist()[0]
