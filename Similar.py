@@ -186,6 +186,8 @@ fig = plt.figure(figsize = (8,8))
 
 try:
   radar = ComplexRadar(fig,categorias,lista_ranges)
+except:
+  st.write("Por favor selecione ao menos 2 variáveis de comparação")
   
   nome = df_comp['Jogador'].tolist()[0]
   if df_comp['Pé'].tolist()[0] == 'direito':
@@ -228,5 +230,4 @@ try:
   st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ")")
   st.pyplot(fig)
   
-except:
-  st.write("Por favor selecione ao menos 2 variáveis de comparação")
+
