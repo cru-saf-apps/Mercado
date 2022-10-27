@@ -114,7 +114,7 @@ for coluna in df_comp.columns[9:]:
   else:
     top = df_comp[coluna].mean()
     
-  lista_ranges.append(top)
+  lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top*1.15))
   
 def _invert(x, limits):
     """inverts a value x on a scale from
