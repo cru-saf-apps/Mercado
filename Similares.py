@@ -236,11 +236,3 @@ try:
 
   except:
     st.write("Por favor selecione ao menos 2 variáveis de comparação")
-
-
-  
-      
-  
-  
-
-
