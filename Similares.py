@@ -270,6 +270,7 @@ t = 0
 while t < len(df_jogs):
   jogador = df_jogs.Jogador[t]
   clube = df_jogs['Equipe atual'][t]
+  
   aux_df = base_comp[(base_comp.Jogador == jogador)&(base_comp['Equipe atual'] == clube)]
   aux_df = aux_df.loc[:, aux_df.columns != 'Jogador']
   aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
@@ -294,7 +295,8 @@ while t < len(df_jogs):
   for coluna in lista_vars[9:]:
     df_jogs[coluna][t] = lista_valores[v]
     v += 1
-    
+  
+  st.write(t)
   t += 1
     
 st.write(df_jogs)
