@@ -254,7 +254,7 @@ df_stats['Equipe atual'] = base_comp['Equipe atual']
 st.write(df_stats)
 
 df_final = df_jogs[['Jogador','Equipe atual']].copy()
-df_final['Soma'] = ""
+df_final['Media'] = ""
 
 t = 0
 while t < len(df_jogs):
