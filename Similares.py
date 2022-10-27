@@ -258,8 +258,7 @@ for jogador in pd.unique(base_comp.Jogador):
     lista_jogs.append(jogador)
     lista_equipes.append(base_comp[base_comp.Jogador == jogador]['Equipe atual'].tolist()[0])
 
-    
-st.write(len(lista_jogs),len(lista_equipes))
-df_jogs = pd.DataFrame(columns={'Jogador':lista_jogs,'Equipe atual':lista_equipes})
+
+df_jogs = pd.DataFrame({'Jogador':lista_jogs,'Equipe atual':lista_equipes})
 
 st.write(df_jogs)
