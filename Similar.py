@@ -246,7 +246,5 @@ for coluna in categorias:
 df_stats['Jogador'] = df_jogs['Jogador']
 df_stats['Equipe atual'] = df_jogs['Equipe atual']
 
-df_stats = df_stats.assign(ID = range(1,len(df_stats)))
-
 st.write(df_stats)
 
