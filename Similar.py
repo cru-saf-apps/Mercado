@@ -263,6 +263,9 @@ while t < len(df_jogs):
   df_final['Soma'][t] = somas
   t += 1
   
+
+df_final['Media'] = df_final.mean(axis=1)
+
 st.write(df_final)
     
 
