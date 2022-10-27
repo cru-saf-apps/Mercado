@@ -260,5 +260,36 @@ for jogador in pd.unique(base_comp.Jogador):
 
 
 df_jogs = pd.DataFrame({'Jogador':lista_jogs,'Equipe atual':lista_equipes})
-
+df_jogs = df_jogs.reindex(columns=df_jogs.columns.tolist().append(lista_vars[9:]))
 st.write(df_jogs)
+
+'''t = 0
+while t < len(df_jogs):
+  jogador = df_jogs.Jogador[t]
+  clube = df_jogs['Equipe atual'][t]
+  aux_df = base_comp[(base_comp.Jogador == jogador)&(base_comp['Equipe atual'] == clube)]
+  aux_df = aux_df.loc[:, df_comp.columns != 'Jogador']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
+
+  aux_df = aux_df.reset_index(drop=True)
+
+  lista_valores = []
+
+  for coluna in aux_df.columns:
+    if coluna in vars_abs:
+      lista_valores.append(aux_df[coluna].sum())
+    else:
+      lista_valores.append(aux_df[coluna].mean())'''
+      
+  
+      
+  
+  
+
+
