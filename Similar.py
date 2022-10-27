@@ -237,7 +237,7 @@ st.write(df_jogs)
 
 df_stats = df_jogs[df_jogs.columns.tolist()[8:]].copy().subtract(lista_valores)
 
-st.write(df_subtract)
+st.write(df_stats)
 
 v = 0
 for coluna in df_jogs.columns[8:]:
