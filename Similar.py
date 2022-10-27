@@ -235,7 +235,7 @@ df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_ind
 
 st.write(df_jogs)
 
-df_subtract = df_jogs[8:].subtract(lista_valores)
+df_stats = df_jogs[[df_jogs.columns.tolist()[8:]]].copy().subtract(lista_valores)
 
 st.write(df_subtract)
 
