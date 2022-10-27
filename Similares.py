@@ -116,6 +116,9 @@ for coluna in df_comp.columns[9:]:
     top1 = np.nanmax(df_comp[df_comp.ID == pd.unique(df_comp.ID)[0]][coluna].mean())
   
   lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top1*1.1))
+
+  
+  
   
 def _invert(x, limits):
     """inverts a value x on a scale from
@@ -235,7 +238,7 @@ except:
   st.write("Por favor selecione ao menos 2 variáveis de comparação")
 
 
-base_comp = base[lista_vars].copy()
+base_comp = base[lista_vars[1:]].copy()
 
 for row in df_comp.index:
   base_comp = base_comp.drop(row,0)
