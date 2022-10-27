@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
 
+data_load_state = st.text('Baixando base de dados...')
+
 @st.cache
 def load_basews(lista_anos,lista_ligas):
   base = pd.DataFrame()
@@ -19,6 +21,8 @@ def load_basews(lista_anos,lista_ligas):
   base = base.reset_index(drop=True)
   
   return base
+
+data_load_state.text("Download concluído")
 
 lista_anos = []
 for ano in range(2018,2022):
