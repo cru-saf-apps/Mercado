@@ -231,6 +231,8 @@ st.pyplot(fig)
 cols_interesse = df_comp.columns.tolist()[1:]
 base_comp = base[cols_interesse].copy()
 
+st.write(base_comp)
+
 df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_index(drop=True)
 
 st.write(df_jogs)
@@ -243,6 +245,13 @@ for coluna in categorias:
 
 df_stats['Jogador'] = df_jogs['Jogador']
 df_stats['Equipe atual'] = df_jogs['Equipe atual']
+
+
+df_stats = df_stats.assign(ID = range(1,len(df_stats)))
+
+for jog in df_stats.ID:
+  aux_df = base[df_stats.ID == jog]
+
 
 st.write(df_stats)
 
