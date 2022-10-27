@@ -266,7 +266,7 @@ for coluna in lista_vars[9:]:
 
 st.write(df_jogs)
 
-'''t = 0
+t = 0
 while t < len(df_jogs):
   jogador = df_jogs.Jogador[t]
   clube = df_jogs['Equipe atual'][t]
@@ -288,7 +288,14 @@ while t < len(df_jogs):
     if coluna in vars_abs:
       lista_valores.append(aux_df[coluna].sum())
     else:
-      lista_valores.append(aux_df[coluna].mean())'''
+      lista_valores.append(aux_df[coluna].mean())
+  
+  v = 0
+  for coluna in lista_vars[9:]:
+    df_jogs[coluna][t] = lista_valores[v]
+    v += 1
+    
+st.write(df_jogs)
       
   
       
