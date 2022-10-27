@@ -258,7 +258,7 @@ df_final['Media'] = ""
 
 t = 0
 while t < len(df_jogs):
-  aux_df = base_comp[(base_comp.Jogador == df_jogs.Jogador[t])&(base_comp['Equipe atual']==df_jogs['Equipe atual'][t])]
+  aux_df = df_stats[(df_stats.Jogador == df_jogs.Jogador[t])&(df_stats['Equipe atual']==df_jogs['Equipe atual'][t])]
 
   lista_medias = []
   for coluna in aux_df.columns.tolist()[8:]:
