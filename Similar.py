@@ -50,220 +50,224 @@ while t<len(nomes):
 
 st.write(base[base.Jogador.isin(lista_results)][['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
 
-st.subheader('Jogador 1')
-nome_busca1 = st.text_input("Nome do primeiro jogador:")
+botao = st.button("Deseja ver jogadores similares para algum jogador?")
 
-if len(base[base.Jogador==nome_busca1]) == 0:
-  st.write("Favor inserir o nome do jogador igual no WyScout")
+if botao:
 
-elif len(pd.unique(base[base.Jogador==nome_busca1]['Equipe atual']))>1:
-  st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
-  st.write(base[base.Jogador==nome_busca1][['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
-  clube1 = st.text_input("Clube do primeiro jogador:")
-  if len(pd.unique(base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)]['Idade']))>1:
-    st.write("Mais de um jogador disponível com este nome/clube, favor inserir a idade atual do jogador desejado.")
-    st.write(base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)][['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
-    idade1 = int(st.text_input("Idade do primeiro jogador:"))
-    st.write("Tabela resumo do jogador desejado:")
-    base1 = base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)&(base.Idade==idade1)]
-    st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+  st.subheader('Jogador 1')
+  nome_busca1 = st.text_input("Nome do primeiro jogador:")
+
+  if len(base[base.Jogador==nome_busca1]) == 0:
+    st.write("Favor inserir o nome do jogador igual no WyScout")
+
+  elif len(pd.unique(base[base.Jogador==nome_busca1]['Equipe atual']))>1:
+    st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
+    st.write(base[base.Jogador==nome_busca1][['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+    clube1 = st.text_input("Clube do primeiro jogador:")
+    if len(pd.unique(base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)]['Idade']))>1:
+      st.write("Mais de um jogador disponível com este nome/clube, favor inserir a idade atual do jogador desejado.")
+      st.write(base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)][['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+      idade1 = int(st.text_input("Idade do primeiro jogador:"))
+      st.write("Tabela resumo do jogador desejado:")
+      base1 = base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)&(base.Idade==idade1)]
+      st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+    else:
+      base1 = base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)]
+      st.write("Tabela resumo do jogador desejado:")
+      st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+
   else:
-    base1 = base[(base.Jogador==nome_busca1)&(base["Equipe atual"] == clube1)]
-    st.write("Tabela resumo do jogador desejado:")
-    st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
-                 
-else:
-    base1 = base[base.Jogador == nome_busca1]
-    st.write("Tabela resumo do jogador desejado:")
-    st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
+      base1 = base[base.Jogador == nome_busca1]
+      st.write("Tabela resumo do jogador desejado:")
+      st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
 
-try:
-  base1 = base1.assign(ID = 1)
-except:
-  st.write('...')
-  
-  
-ano1min = int(np.nanmin(base1.Ano))
-ano1max = int(np.nanmax(base1.Ano))
+  try:
+    base1 = base1.assign(ID = 1)
+  except:
+    st.write('...')
 
-if ano1min < ano1max:
-  anos1 = st.slider('Anos analisados para '+nome_busca1,ano1min, ano1max, (ano1min, ano1max))
-else:
-  st.write(nome_busca1 + " somente disponível em "+str(ano1min))
-  anos1 = [ano1min,ano1max]
-  
-df = base1[(base1.Ano>=anos1[0])&(base1.Ano<=anos1[1])]
 
-st.write(df)
+  ano1min = int(np.nanmin(base1.Ano))
+  ano1max = int(np.nanmax(base1.Ano))
 
-st.subheader("Variáveis para comparação")
-vars = st.multiselect(label = 'Selecione as variáveis desejadas',options=df.columns[9:])
-lista_vars = ['ID','Jogador','Pé','Altura','Equipe atual','Equipe no ano','Liga','Posição','Idade']
-for var in vars:
-  lista_vars.append(str(var))
-  
-df_comp = df[lista_vars].copy()
-
-st.write(df_comp)
-
-lista_ranges = []
-
-for coluna in df_comp.columns[9:]:
-  if coluna in vars_abs:
-    top = df_comp[coluna].sum()
+  if ano1min < ano1max:
+    anos1 = st.slider('Anos analisados para '+nome_busca1,ano1min, ano1max, (ano1min, ano1max))
   else:
-    top = df_comp[coluna].mean()
-    
-  lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top*1.15))
-  
-def _invert(x, limits):
-    """inverts a value x on a scale from
-    limits[0] to limits[1]"""
-    return limits[1] - (x - limits[0])
+    st.write(nome_busca1 + " somente disponível em "+str(ano1min))
+    anos1 = [ano1min,ano1max]
 
-def _scale_data(data, ranges):
-    """scales data[1:] to ranges[0],
-    inverts if the scale is reversed"""
-    for d, (y1, y2) in zip(data[1:], ranges[1:]):
-        assert (y1 <= d <= y2) or (y2 <= d <= y1)
-    x1, x2 = ranges[0]
-    d = data[0]
-    if x1 > x2:
-        d = _invert(d, (x1, x2))
-        x1, x2 = x2, x1
-    sdata = [d]
-    for d, (y1, y2) in zip(data[1:], ranges[1:]):
-        if y1 > y2:
-            d = _invert(d, (y1, y2))
-            y1, y2 = y2, y1
-        sdata.append((d-y1) / (y2-y1) 
-                     * (x2 - x1) + x1)
-    return sdata
+  df = base1[(base1.Ano>=anos1[0])&(base1.Ano<=anos1[1])]
 
-class ComplexRadar():
-    def __init__(self, fig, variables, ranges,
-                 n_ordinate_levels=6):
-        angles = np.arange(0, 360, 360./len(variables))
+  st.write(df)
 
-        axes = [fig.add_axes([0.1,0.1,0.9,0.9],polar=True,
-                label = "axes{}".format(i)) 
-                for i in range(len(variables))]
-        l, text = axes[0].set_thetagrids(angles, 
-                                         labels=variables)
-        [txt.set_rotation(angle-90) for txt, angle 
-             in zip(text, angles)]
-        for ax in axes[1:]:
-            ax.patch.set_visible(False)
-            ax.grid("off")
-            ax.xaxis.set_visible(False)
-        for i, ax in enumerate(axes):
-            grid = np.linspace(*ranges[i], 
-                               num=n_ordinate_levels)
-            gridlabel = ["{}".format(round(x,2)) 
-                         for x in grid]
-            if ranges[i][0] > ranges[i][1]:
-                grid = grid[::-1] # hack to invert grid
-                          # gridlabels aren't reversed
-            gridlabel[0] = "" # clean up origin
-            ax.set_rgrids(grid, labels=gridlabel,
-                         angle=angles[i])
-            #ax.spines["polar"].set_visible(False)
-            ax.set_ylim(*ranges[i])
-        # variables for plotting
-        self.angle = np.deg2rad(np.r_[angles, angles[0]])
-        self.ranges = ranges
-        self.ax = axes[0]
-    def plot(self, data, *args, **kw):
-        sdata = _scale_data(data, self.ranges)
-        self.ax.plot(self.angle, np.r_[sdata, sdata[0]], *args, **kw)
-    def fill(self, data, *args, **kw):
-        sdata = _scale_data(data, self.ranges)
-        self.ax.fill(self.angle, np.r_[sdata, sdata[0]], *args, **kw)
-        
-categorias = lista_vars[9:]
+  st.subheader("Variáveis para comparação")
+  vars = st.multiselect(label = 'Selecione as variáveis desejadas',options=df.columns[9:])
+  lista_vars = ['ID','Jogador','Pé','Altura','Equipe atual','Equipe no ano','Liga','Posição','Idade']
+  for var in vars:
+    lista_vars.append(str(var))
 
-fig = plt.figure(figsize = (8,8))
+  df_comp = df[lista_vars].copy()
 
-radar = ComplexRadar(fig,categorias,lista_ranges)
+  st.write(df_comp)
 
-nome = df_comp['Jogador'].tolist()[0]
-if df_comp['Pé'].tolist()[0] == 'direito':
-  pe = 'Destro'
-elif df_comp['Pé'].tolist()[0] == 'esquerdo':
-  pe = 'Canhoto'
-elif df_comp['Pé'].tolist()[0] == 'ambos':
-  pe = 'Ambidestro'
-else:
-  pe = 'Desconhecido'
+  lista_ranges = []
 
-altura = df_comp['Altura'].tolist()[0]
+  for coluna in df_comp.columns[9:]:
+    if coluna in vars_abs:
+      top = df_comp[coluna].sum()
+    else:
+      top = df_comp[coluna].mean()
 
-aux_df = df_comp.loc[:, df_comp.columns != 'Jogador']
-aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
-aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
-aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
-aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
-aux_df = aux_df.loc[:, aux_df.columns != 'ID']
-aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
-aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
-aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
+    lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top*1.15))
 
-aux_df = aux_df.reset_index(drop=True)
+  def _invert(x, limits):
+      """inverts a value x on a scale from
+      limits[0] to limits[1]"""
+      return limits[1] - (x - limits[0])
 
-lista_valores = []
+  def _scale_data(data, ranges):
+      """scales data[1:] to ranges[0],
+      inverts if the scale is reversed"""
+      for d, (y1, y2) in zip(data[1:], ranges[1:]):
+          assert (y1 <= d <= y2) or (y2 <= d <= y1)
+      x1, x2 = ranges[0]
+      d = data[0]
+      if x1 > x2:
+          d = _invert(d, (x1, x2))
+          x1, x2 = x2, x1
+      sdata = [d]
+      for d, (y1, y2) in zip(data[1:], ranges[1:]):
+          if y1 > y2:
+              d = _invert(d, (y1, y2))
+              y1, y2 = y2, y1
+          sdata.append((d-y1) / (y2-y1) 
+                       * (x2 - x1) + x1)
+      return sdata
 
-for coluna in aux_df.columns:
-  if coluna in vars_abs:
-    lista_valores.append(aux_df[coluna].sum())
+  class ComplexRadar():
+      def __init__(self, fig, variables, ranges,
+                   n_ordinate_levels=6):
+          angles = np.arange(0, 360, 360./len(variables))
+
+          axes = [fig.add_axes([0.1,0.1,0.9,0.9],polar=True,
+                  label = "axes{}".format(i)) 
+                  for i in range(len(variables))]
+          l, text = axes[0].set_thetagrids(angles, 
+                                           labels=variables)
+          [txt.set_rotation(angle-90) for txt, angle 
+               in zip(text, angles)]
+          for ax in axes[1:]:
+              ax.patch.set_visible(False)
+              ax.grid("off")
+              ax.xaxis.set_visible(False)
+          for i, ax in enumerate(axes):
+              grid = np.linspace(*ranges[i], 
+                                 num=n_ordinate_levels)
+              gridlabel = ["{}".format(round(x,2)) 
+                           for x in grid]
+              if ranges[i][0] > ranges[i][1]:
+                  grid = grid[::-1] # hack to invert grid
+                            # gridlabels aren't reversed
+              gridlabel[0] = "" # clean up origin
+              ax.set_rgrids(grid, labels=gridlabel,
+                           angle=angles[i])
+              #ax.spines["polar"].set_visible(False)
+              ax.set_ylim(*ranges[i])
+          # variables for plotting
+          self.angle = np.deg2rad(np.r_[angles, angles[0]])
+          self.ranges = ranges
+          self.ax = axes[0]
+      def plot(self, data, *args, **kw):
+          sdata = _scale_data(data, self.ranges)
+          self.ax.plot(self.angle, np.r_[sdata, sdata[0]], *args, **kw)
+      def fill(self, data, *args, **kw):
+          sdata = _scale_data(data, self.ranges)
+          self.ax.fill(self.angle, np.r_[sdata, sdata[0]], *args, **kw)
+
+  categorias = lista_vars[9:]
+
+  fig = plt.figure(figsize = (8,8))
+
+  radar = ComplexRadar(fig,categorias,lista_ranges)
+
+  nome = df_comp['Jogador'].tolist()[0]
+  if df_comp['Pé'].tolist()[0] == 'direito':
+    pe = 'Destro'
+  elif df_comp['Pé'].tolist()[0] == 'esquerdo':
+    pe = 'Canhoto'
+  elif df_comp['Pé'].tolist()[0] == 'ambos':
+    pe = 'Ambidestro'
   else:
-    lista_valores.append(aux_df[coluna].mean())
+    pe = 'Desconhecido'
 
-legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
-radar.plot(lista_valores,label=legenda)
+  altura = df_comp['Altura'].tolist()[0]
+
+  aux_df = df_comp.loc[:, df_comp.columns != 'Jogador']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
+  aux_df = aux_df.loc[:, aux_df.columns != 'ID']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
+
+  aux_df = aux_df.reset_index(drop=True)
+
+  lista_valores = []
+
+  for coluna in aux_df.columns:
+    if coluna in vars_abs:
+      lista_valores.append(aux_df[coluna].sum())
+    else:
+      lista_valores.append(aux_df[coluna].mean())
+
+  legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
+  radar.plot(lista_valores,label=legenda)
 
 
-fig.legend()
+  fig.legend()
 
-st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ")")
-st.pyplot(fig)
-  
+  st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ")")
+  st.pyplot(fig)
 
-cols_interesse = df_comp.columns.tolist()[1:]
-base_comp = base[cols_interesse].copy()
 
-st.write(base_comp)
+  cols_interesse = df_comp.columns.tolist()[1:]
+  base_comp = base[cols_interesse].copy()
 
-df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_index(drop=True)
+  st.write(base_comp)
 
-st.write(df_jogs)
+  df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual']).reset_index(drop=True)
 
-df_stats = base_comp[base_comp.columns.tolist()[8:]].copy().subtract(lista_valores)
-v = 0
-for coluna in categorias:
-  df_stats[coluna] = (df_stats[coluna]/lista_valores[v])-1
-  v += 1
+  st.write(df_jogs)
 
-df_stats['Jogador'] = base_comp['Jogador']
-df_stats['Equipe atual'] = base_comp['Equipe atual']
+  df_stats = base_comp[base_comp.columns.tolist()[8:]].copy().subtract(lista_valores)
+  v = 0
+  for coluna in categorias:
+    df_stats[coluna] = (df_stats[coluna]/lista_valores[v])-1
+    v += 1
 
-st.write(df_stats)
+  df_stats['Jogador'] = base_comp['Jogador']
+  df_stats['Equipe atual'] = base_comp['Equipe atual']
 
-df_final = df_jogs[['Jogador','Equipe atual']].copy()
-df_final['Soma'] = ""
+  st.write(df_stats)
 
-t = 0
-while t < len(df_jogs):
-  aux_df = base_comp[(base_comp.Jogador == df_jogs.Jogador[t])&(base_comp['Equipe atual']==df_jogs['Equipe atual'][t])]
-  
-  somas = 0
-  for coluna in aux_df.columns.tolist()[8:]:
-    soma = aux_df[coluna].sum()
-    somas = somas + soma
-    
-  df_final['Soma'][t] = somas
-  t += 1
-  
+  df_final = df_jogs[['Jogador','Equipe atual']].copy()
+  df_final['Soma'] = ""
 
-st.write(df_final)
+  t = 0
+  while t < len(df_jogs):
+    aux_df = base_comp[(base_comp.Jogador == df_jogs.Jogador[t])&(base_comp['Equipe atual']==df_jogs['Equipe atual'][t])]
+
+    somas = 0
+    for coluna in aux_df.columns.tolist()[8:]:
+      soma = aux_df[coluna].sum()
+      somas = somas + soma
+
+    df_final['Soma'][t] = somas
+    t += 1
+
+
+  st.write(df_final)
     
 
