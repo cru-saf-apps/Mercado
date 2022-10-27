@@ -295,6 +295,8 @@ while t < len(df_jogs):
     df_jogs[coluna][t] = lista_valores[v]
     v += 1
     
+  t += 1
+    
 st.write(df_jogs)
       
   
