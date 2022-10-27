@@ -91,7 +91,7 @@ ligas = pd.unique(df.Liga)
 
 ligas_selec = st.multiselect("Ligas a serem consideradas",options=ligas)
 
-df = df[df.Liga.isin(ligas_select)]
+df = df[df.Liga.isin(ligas_selec)]
 
 
 st.subheader("Variáveis para comparação")
