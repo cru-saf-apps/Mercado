@@ -228,3 +228,7 @@ st.subheader("Radar de Desempenho\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(
 st.pyplot(fig)
   
 
+cols_interesse = df_comp.columns.tolist()
+base_comp = base[cols_interesse].copy()
+
+st.write(base_comp)
