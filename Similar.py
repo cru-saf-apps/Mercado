@@ -238,7 +238,7 @@ st.write(df_jogs)
 df_stats = df_jogs[df_jogs.columns.tolist()[8:]].copy().subtract(lista_valores)
 v = 0
 for coluna in categorias:
-  df_stats[coluna] = (abs(df_stats[coluna]) - 1)/lista_valores[v]
+  df_stats[coluna] = (abs(df_stats[coluna])/lista_valores[v])-1
   v += 1
 
 df_stats['Jogador'] = df_jogs['Jogador']
