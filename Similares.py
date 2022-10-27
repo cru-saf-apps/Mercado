@@ -244,4 +244,20 @@ for row in df_comp.index:
   base_comp = base_comp.drop(row,0)
   
 st.write(len(base_comp),len(base))
-  
+
+lista_jogs = []
+lista_equipes = []
+for jogador in pd.unique(base_comp.Jogador):
+  if len(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual']))>1:
+    t = 0
+    while t < len(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual'])):
+      lista_jogs.append(jogador)
+      lista_equipes.append(pd.unique(base_comp[base_comp.Jogador == jogador]['Equipe atual'][t]))
+      t += 1
+  else:
+    lista_jogs.append(jogador)
+    lista_equipes.append(base_comp[base_comp.Jogador == jogador]['Equipe atual'].tolist()[0])
+
+df_jogs = pd.DataFrame(columns={'Jogador':lista_jogs,'Equipe atual':lista_equipes})
+
+st.write(df_jogs)
