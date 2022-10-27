@@ -231,6 +231,6 @@ st.pyplot(fig)
 cols_interesse = df_comp.columns.tolist()[1:]
 base_comp = base[cols_interesse].copy()
 
-df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual'])
+df_jogs = base_comp.drop_duplicates(subset=['Jogador','Equipe atual'])[['Jogador','Equipe atual']]
 
 st.write(df_jogs)
