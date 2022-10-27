@@ -256,7 +256,7 @@ while t < len(df_jogs):
   aux_df = base_comp[(base_comp.Jogador == df_jogs.Jogador[t])&(base_comp['Equipe atual']==df_jogs['Equipe atual'][t])]
   
   somas = 0
-  for coluna in aux_df.columns.tolist()[8:]
+  for coluna in aux_df.columns.tolist()[8:]:
     soma = aux_df[coluna].sum()
     somas = somas + soma
     
