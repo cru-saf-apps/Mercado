@@ -271,7 +271,7 @@ while t < len(df_jogs):
   jogador = df_jogs.Jogador[t]
   clube = df_jogs['Equipe atual'][t]
   aux_df = base_comp[(base_comp.Jogador == jogador)&(base_comp['Equipe atual'] == clube)]
-  aux_df = aux_df.loc[:, df_comp.columns != 'Jogador']
+  aux_df = aux_df.loc[:, aux_df.columns != 'Jogador']
   aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
   aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
   aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
