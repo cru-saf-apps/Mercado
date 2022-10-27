@@ -74,9 +74,8 @@ else:
     st.write("Tabela resumo do jogador desejado:")
     st.write(base1[['Jogador','Equipe atual','Equipe no ano','Minutos jogados:','Ano','Liga']])
 
-base1 = base1.assign(ID = 1)
 
-
+    
 ano1min = int(np.nanmin(base1.Ano))
 ano1max = int(np.nanmax(base1.Ano))
 
