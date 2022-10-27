@@ -95,3 +95,13 @@ else:
 df = base1[(base1.Ano>=anos1[0])&(base1.Ano<=anos1[1])]
 
 st.write(df)
+
+st.subheader("Variáveis para comparação")
+vars = st.multiselect(label = 'Selecione as variáveis desejadas',options=df.columns[9:])
+lista_vars = ['ID','Jogador','Pé','Altura','Equipe atual','Equipe no ano','Liga','Posição','Idade']
+for var in vars:
+  lista_vars.append(str(var))
+  
+df_comp = df[lista_vars].copy()
+
+st.write(df_comp)
