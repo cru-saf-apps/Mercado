@@ -205,7 +205,10 @@ for coluna in df_comp.columns[9:]:
   lista_bots.append(bot)
   
 st.write(lista_bots, lista_tops)    
-  
+
+for item in range(0,len(lista_bots)):
+  lista_ranges.append((lista_bots[item],lista_tops[item]))
+
 st.write(lista_ranges)
 
 
