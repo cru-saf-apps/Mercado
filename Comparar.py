@@ -226,13 +226,12 @@ def gerar_ranges(df_comp,df_jogs,base_ranges):
   
 lista_ranges = gerar_ranges(df_comp,df_jogs,base_ranges)
 
-@st.cache
+
 def _invert(x, limits):
     """inverts a value x on a scale from
     limits[0] to limits[1]"""
     return limits[1] - (x - limits[0])
-  
-@st.cache
+
 def _scale_data(data, ranges):
     """scales data[1:] to ranges[0],
     inverts if the scale is reversed"""
@@ -252,7 +251,6 @@ def _scale_data(data, ranges):
                      * (x2 - x1) + x1)
     return sdata
 
-@st.cache
 class ComplexRadar():
     def __init__(self, fig, variables, ranges,
                  n_ordinate_levels=6):
