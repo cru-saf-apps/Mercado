@@ -238,50 +238,48 @@ categorias = lista_vars[9:]
 
 fig = plt.figure(figsize = (8,8))
 
-try:
-  radar = ComplexRadar(fig,categorias,lista_ranges)
+radar = ComplexRadar(fig,categorias,lista_ranges)
 
-  for jogador in pd.unique(df_comp.ID):
-      nome = df_comp[df_comp.ID == jogador]['Jogador'].tolist()[0]
-      if df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'direito':
-        pe = 'Destro'
-      elif df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'esquerdo':
-        pe = 'Canhoto'
-      elif df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'ambos':
-        pe = 'Ambidestro'
+for jogador in pd.unique(df_comp.ID):
+    nome = df_comp[df_comp.ID == jogador]['Jogador'].tolist()[0]
+    if df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'direito':
+      pe = 'Destro'
+    elif df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'esquerdo':
+      pe = 'Canhoto'
+    elif df_comp[df_comp.ID == jogador]['Pé'].tolist()[0] == 'ambos':
+      pe = 'Ambidestro'
+    else:
+      pe = 'Desconhecido'
+
+    altura = df_comp[df_comp.ID == jogador]['Altura'].tolist()[0]
+
+    aux_df = df_comp[df_comp.ID == jogador].loc[:, df_comp.columns != 'Jogador']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
+    aux_df = aux_df.loc[:, aux_df.columns != 'ID']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
+    aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
+
+    aux_df = aux_df.reset_index(drop=True)
+
+    lista_valores = []
+
+    for coluna in aux_df.columns:
+      if coluna in vars_abs:
+        lista_valores.append(aux_df[coluna].sum())
       else:
-        pe = 'Desconhecido'
-        
-      altura = df_comp[df_comp.ID == jogador]['Altura'].tolist()[0]
+        lista_valores.append(aux_df[coluna].mean())
 
-      aux_df = df_comp[df_comp.ID == jogador].loc[:, df_comp.columns != 'Jogador']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Equipe atual']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Equipe no ano']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Posição']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Idade']
-      aux_df = aux_df.loc[:, aux_df.columns != 'ID']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Liga']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Pé']
-      aux_df = aux_df.loc[:, aux_df.columns != 'Altura']
-
-      aux_df = aux_df.reset_index(drop=True)
-
-      lista_valores = []
-
-      for coluna in aux_df.columns:
-        if coluna in vars_abs:
-          lista_valores.append(aux_df[coluna].sum())
-        else:
-          lista_valores.append(aux_df[coluna].mean())
-      
-      legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
-      radar.plot(lista_valores,label=legenda)
+    legenda = nome + " (" + str(altura) +"cm; Pé: "+pe+")"
+    radar.plot(lista_valores,label=legenda)
 
 
-  fig.legend()
- 
-  st.subheader("Radar de Comparação\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ") X "+nome_busca2+ " ("+str(anos2[0]) + " a "+str(anos2[1])+")")
-  st.pyplot(fig)
-  
-except:
-  st.write("Por favor selecione ao menos 2 variáveis de comparação")
+fig.legend()
+
+st.subheader("Radar de Comparação\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ") X "+nome_busca2+ " ("+str(anos2[0]) + " a "+str(anos2[1])+")")
+st.pyplot(fig)
+
+st.write("Por favor selecione ao menos 2 variáveis de comparação")
