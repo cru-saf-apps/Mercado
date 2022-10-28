@@ -119,6 +119,10 @@ ano1max = int(np.nanmax(base1.Ano))
 ano2min = int(np.nanmin(base2.Ano))
 ano2max = int(np.nanmax(base2.Ano))
 
+
+def gerar_df_por_anos():
+
+
 if ano1min < ano1max:
   anos1 = st.slider('Anos analisados para '+nome_busca1,ano1min, ano1max, (ano1min, ano1max))
 else:
@@ -144,79 +148,94 @@ df_comp = df[lista_vars].copy()
 
 st.write(df_comp)
 
-lista_ranges = []
 
-if anos1[0] > anos2[0]:
-  ano1_range = anos2[0]
-else:
-  ano1_range = anos1[0]
+
+
+@st.cache
+def gerar_base_ranges(anos1,anos2,base):
+  if anos1[0] > anos2[0]:
+    ano1_range = anos2[0]
+  else:
+    ano1_range = anos1[0]
+
+
+  if anos1[1] > anos2[1]:
+    ano2_range = anos1[1]
+  else:
+    ano2_range = anos2[1]
   
-
-if anos1[1] > anos2[1]:
-  ano2_range = anos1[1]
-else:
-  ano2_range = anos2[1]
-
-base_ranges = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)]
+  base_ranges = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)]
   
-df_jogs = base.drop_duplicates(['Jogador','Equipe atual']).reset_index(drop=True)
+  return base_ranges
 
-lista_tops = []
-lista_bots = []
-for coluna in df_comp.columns[9:]:
-  top = 0
-  t = 0
-  while t < len(df_jogs):
-    aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
-    if coluna in vars_abs:
-      soma = np.nansum(aux_df[coluna])
-      if soma > top:
-        top = soma
-        t += 1
-      else:
-        t += 1
-    else:
-      soma = np.nanmean(aux_df[coluna])
-      if soma > top:
-        top = soma
-        t += 1
-      else:
-        t += 1
-  lista_tops.append(top)
+base_ranges = gerar_base_ranges(anos1,anos2,base)
+df_jogs = base_ranges.drop_duplicates(['Jogador','Equipe atual']).reset_index(drop=True)
+
+
+
+
+@st.cache
+def gerar_ranges(df_comp,df_jogs,base_ranges):
+  lista_ranges = []
+  lista_tops = []
+  lista_bots = []
   
-  bot = 0
-  t = 0
-  while t < len(df_jogs):
-    aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
-    if coluna in vars_abs:
-      soma = np.nansum(aux_df[coluna])
-      if soma < bot:
-        bot = soma
-        t += 1
+  for coluna in df_comp.columns[9:]:
+    top = 0
+    t = 0
+    while t < len(df_jogs):
+      aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
+      if coluna in vars_abs:
+        soma = np.nansum(aux_df[coluna])
+        if soma > top:
+          top = soma
+          t += 1
+        else:
+          t += 1
       else:
-        t += 1
-    else:
-      soma = np.nanmean(aux_df[coluna])
-      if soma < bot:
-        bot = soma
-        t += 1
+        soma = np.nanmean(aux_df[coluna])
+        if soma > top:
+          top = soma
+          t += 1
+        else:
+          t += 1
+    lista_tops.append(top)
+
+    bot = 0
+    t = 0
+    while t < len(df_jogs):
+      aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
+      if coluna in vars_abs:
+        soma = np.nansum(aux_df[coluna])
+        if soma < bot:
+          bot = soma
+          t += 1
+        else:
+          t += 1
       else:
-        t += 1
-  lista_bots.append(bot)
+        soma = np.nanmean(aux_df[coluna])
+        if soma < bot:
+          bot = soma
+          t += 1
+        else:
+          t += 1
+    lista_bots.append(bot)
+    
+  for item in range(0,len(lista_bots)):
+    lista_ranges.append((lista_bots[item],lista_tops[item]))
+    
+  return lista_ranges
   
-st.write(lista_bots, lista_tops)    
+  
+lista_ranges = gerar_ranges(df_comp,df_jogs,base_ranges)
 
-for item in range(0,len(lista_bots)):
-  lista_ranges.append((lista_bots[item],lista_tops[item]))
-
-st.write(lista_ranges)
-
-
+@st.cache
 def _invert(x, limits):
     """inverts a value x on a scale from
     limits[0] to limits[1]"""
     return limits[1] - (x - limits[0])
-
+  
+@st.cache
 def _scale_data(data, ranges):
     """scales data[1:] to ranges[0],
     inverts if the scale is reversed"""
@@ -236,6 +255,7 @@ def _scale_data(data, ranges):
                      * (x2 - x1) + x1)
     return sdata
 
+@st.cache
 class ComplexRadar():
     def __init__(self, fig, variables, ranges,
                  n_ordinate_levels=6):
@@ -325,5 +345,3 @@ fig.legend()
 
 st.subheader("Radar de Comparação\n"+nome_busca1 + " ("+str(anos1[0])+" a "+str(anos1[1]) + ") X "+nome_busca2+ " ("+str(anos2[0]) + " a "+str(anos2[1])+")")
 st.pyplot(fig)
-
-st.write("Por favor selecione ao menos 2 variáveis de comparação")
