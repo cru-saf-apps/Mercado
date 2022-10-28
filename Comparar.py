@@ -120,9 +120,6 @@ ano2min = int(np.nanmin(base2.Ano))
 ano2max = int(np.nanmax(base2.Ano))
 
 
-def gerar_df_por_anos():
-
-
 if ano1min < ano1max:
   anos1 = st.slider('Anos analisados para '+nome_busca1,ano1min, ano1max, (ano1min, ano1max))
 else:
