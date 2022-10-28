@@ -162,7 +162,7 @@ for coluna in df_comp.columns[9:]:
   top = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)].nlargest(1,coluna)[coluna].tolist()[0]
   bot = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)].nsmallest(1,coluna)[coluna].tolist()[0]
   
-  lista_ranges.append((bot,top))
+  lista_ranges.append((float(bot),float(top)))
   
 st.write(lista_ranges)
 
