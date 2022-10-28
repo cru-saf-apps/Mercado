@@ -146,85 +146,70 @@ df_comp = df[lista_vars].copy()
 st.write(df_comp)
 
 
+if anos1[0] > anos2[0]:
+  ano1_range = anos2[0]
+else:
+  ano1_range = anos1[0]
 
 
-@st.cache
-def gerar_base_ranges(anos1,anos2,base):
-  if anos1[0] > anos2[0]:
-    ano1_range = anos2[0]
-  else:
-    ano1_range = anos1[0]
+if anos1[1] > anos2[1]:
+  ano2_range = anos1[1]
+else:
+  ano2_range = anos2[1]
 
+base_ranges = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)]
 
-  if anos1[1] > anos2[1]:
-    ano2_range = anos1[1]
-  else:
-    ano2_range = anos2[1]
-  
-  base_ranges = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)]
-  
-  return base_ranges
-
-base_ranges = gerar_base_ranges(anos1,anos2,base)
 df_jogs = base_ranges.drop_duplicates(['Jogador','Equipe atual']).reset_index(drop=True)
 
 
-
-
-@st.cache
-def gerar_ranges(df_comp,df_jogs,base_ranges):
-  lista_ranges = []
-  lista_tops = []
-  lista_bots = []
+lista_ranges = []
+lista_tops = []
+lista_bots = []
   
-  for coluna in df_comp.columns[9:]:
-    top = 0
-    t = 0
-    while t < len(df_jogs):
-      aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
-      if coluna in vars_abs:
-        soma = np.nansum(aux_df[coluna])
-        if soma > top:
-          top = soma
-          t += 1
-        else:
-          t += 1
+for coluna in df_comp.columns[9:]:
+  top = 0
+  t = 0
+  while t < len(df_jogs):
+    aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
+    if coluna in vars_abs:
+      soma = np.nansum(aux_df[coluna])
+      if soma > top:
+        top = soma
+        t += 1
       else:
-        soma = np.nanmean(aux_df[coluna])
-        if soma > top:
-          top = soma
-          t += 1
-        else:
-          t += 1
-    lista_tops.append(top)
-
-    bot = 0
-    t = 0
-    while t < len(df_jogs):
-      aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
-      if coluna in vars_abs:
-        soma = np.nansum(aux_df[coluna])
-        if soma < bot:
-          bot = soma
-          t += 1
-        else:
-          t += 1
+        t += 1
+    else:
+      soma = np.nanmean(aux_df[coluna])
+      if soma > top:
+        top = soma
+        t += 1
       else:
-        soma = np.nanmean(aux_df[coluna])
-        if soma < bot:
-          bot = soma
-          t += 1
-        else:
-          t += 1
-    lista_bots.append(bot)
-    
-  for item in range(0,len(lista_bots)):
-    lista_ranges.append((lista_bots[item],lista_tops[item]))
-    
-  return lista_ranges
-  
-  
-lista_ranges = gerar_ranges(df_comp,df_jogs,base_ranges)
+        t += 1
+  lista_tops.append(top)
+
+  bot = 0
+  t = 0
+  while t < len(df_jogs):
+    aux_df = base_ranges[(base_ranges.Jogador == df_jogs.Jogador[t])&(base_ranges['Equipe atual']==df_jogs['Equipe atual'][t])]
+    if coluna in vars_abs:
+      soma = np.nansum(aux_df[coluna])
+      if soma < bot:
+        bot = soma
+        t += 1
+      else:
+        t += 1
+    else:
+      soma = np.nanmean(aux_df[coluna])
+      if soma < bot:
+        bot = soma
+        t += 1
+      else:
+        t += 1
+  lista_bots.append(bot)
+
+for item in range(0,len(lista_bots)):
+  lista_ranges.append((lista_bots[item],lista_tops[item]))
+
 
 
 def _invert(x, limits):
