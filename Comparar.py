@@ -158,7 +158,8 @@ if anos1[1] > anos2[1]:
 else:
   ano2_range = anos2[1]
 
-st.write(base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)].nlargest(1,'Golos')['Golos'])
+st.write(base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)].nlargest(1,'Golos')['Golos'].tolist()[0],
+        base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)].nsmallest(1,'Golos')['Golos'].tolist()[0])
 
 for coluna in df_comp.columns[9:]:
   top = base[(base.Ano>=ano1_range)&(base1.Ano<=ano2_range)].nlargest(1,coluna)[coluna].tolist()[0]
