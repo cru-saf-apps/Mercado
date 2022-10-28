@@ -159,7 +159,7 @@ else:
 
 base_ranges = base[(base.Ano>=ano1_range)&(base.Ano<=ano2_range)]
   
-df_jogs = base.drop_duplicates(['Jogador','Equipe atual'])
+df_jogs = base.drop_duplicates(['Jogador','Equipe atual']).reset_index(drop=True)
 
 lista_tops = []
 lista_bots = []
