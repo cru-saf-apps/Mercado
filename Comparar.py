@@ -145,7 +145,29 @@ df_comp = df[lista_vars].copy()
 st.write(df_comp)
 
 lista_ranges = []
+lista_ranges_teste = []
 
+if anos1[0] > anos2[0]:
+  ano1_range = anos2[0]
+else:
+  ano1_range = anos1[0]
+  
+
+if anos1[1] > anos2[1]:
+  ano2_range = anos1[1]
+else:
+  ano2_range = anos2[1]
+
+for coluna in df_comp.columns[9:]:
+  top = base[(base.Ano>=ano1_range)&(base1.Ano<=ano2_range)].nlargest(1,coluna)[coluna].tolist()[0]
+  bot = base[(base.Ano>=ano1_range)&(base1.Ano<=ano2_range)].nsmallest(1,coluna)[coluna].tolist()[0]
+  
+  lista_ranges_teste.append(bot,top)
+  
+st.write(lista_ranges_teste)
+             
+  
+  
 for coluna in df_comp.columns[9:]:
   if coluna in vars_abs:
     top1 = df_comp[df_comp.ID == pd.unique(df_comp.ID)[0]][coluna].sum()
@@ -158,7 +180,8 @@ for coluna in df_comp.columns[9:]:
     lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top1*1.1))
   elif top2 >= top1:
     lista_ranges.append((0.85*np.nanmin(df_comp[coluna]),top2*1.1))
-    
+
+st.write(lista_ranges)
 
 def _invert(x, limits):
     """inverts a value x on a scale from
