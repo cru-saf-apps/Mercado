@@ -91,78 +91,77 @@ df_rank['Media'] = df_rank[vars_comp].mean(axis=1)
 df_rank['SD'] = df_rank[vars_comp].std(axis=1)
 
 
-df_jogs = df_rank.copy().drop_duplicates(subset=['Jogador','Equipe atual']).drop(df_rank.columns[-(len(vars_select)+3):].tolist(),axis=1)
+@st.cache
+def gen_df_jogs_pronto(df_rank, vars_comp):
+
+    df_jogs = df_rank.copy().drop_duplicates(subset=['Jogador','Equipe atual']).drop(df_rank.columns[-(len(vars_select)+3):].tolist(),axis=1)
+
+    dic_colunas = {}
+    for coluna in df_rank.columns[-(len(vars_comp)+2):-2]:
+        lista_medias = []
+
+        for index, row in df_jogs.iterrows():
+            if pd.isnull(df_jogs['Equipe atual'][index]):
+                df_aux = df_rank[(df_rank.Jogador == df_jogs.Jogador[index])&(pd.isnull(df_rank['Equipe atual']) == True)]
+            else:
+                df_aux = df_rank[(df_rank.Jogador == df_jogs.Jogador[index])&(df_rank['Equipe atual'] == df_jogs['Equipe atual'][index])]
+            lista_valores = []
+            for liga in pd.unique(df_aux.Liga):
+                for ano in pd.unique(df_aux[df_aux.Liga == liga]['Ano']):
+                    aux_df = df_aux[(df_aux.Ano == ano)&(df_aux.Liga == liga)]
+                    if ano == ano_min:
+                        lista_valores.append(peso_ligas[liga]*peso_min*np.nanmean(aux_df[coluna]))
+                    elif ano == ano_max:
+                        lista_valores.append(peso_ligas[liga]*peso_max*np.nanmean(aux_df[coluna]))
+
+            media = np.nanmean(lista_valores)
+            lista_medias.append(media)
+
+        dic_colunas[coluna] = lista_medias
+        df_jogs[coluna] = dic_colunas[coluna]
+
+
+    df_jogs['Media'] = df_jogs[vars_comp].mean(axis=1)
+    df_jogs['SD'] = df_jogs[vars_comp].std(axis=1)                 
+
+    df_jogs = df_jogs.dropna(subset=['Media'])
+    df_jogs['Media'] = df_jogs['Media'].astype('float')
+    
+    return df_jogs
+
+
+df_jogs = gen_df_jogs_pronto(df_rank,vars_comp)
 
 
 
-''' fazendo media ponderada, por liga e por ano dentro da liga'''
+@st.cache
+def gen_df_show_pronto(df_jogs, vars_select):
+    df_show = df_jogs[['Jogador','Posição','Equipe atual']]
+
+    for coluna in df_jogs.columns[-(len(vars_select)+3):-2]:
+        df_show[coluna] = ""
+        for index, row in df_show.iterrows():
+            aux_df = base[(base.Jogador == df_show.Jogador[index])&(base['Equipe atual']==df_show['Equipe atual'][index])]
+            if coluna in vars_abs:
+                soma = np.nansum(aux_df[coluna])
+            else:
+                soma = np.nanmean(aux_df[coluna])
+
+            df_show[coluna][index] = soma
+
+    df_show['Media'] = df_jogs['Media']
+    df_show['SD'] = df_jogs['SD']
+
+    df_show = df_show.assign(Nota = df_show.Media * df_show.Minutos)
+    df_show = df_show.sort_values(by='Nota',ascending = False)
+    df_show = df_show.assign(Ranking = range(1,len(df_show)+1))
 
 
-'''precisa inverter a ordem para que faça o aux_df para cada jogador e somente
-após o filtro de liga -> ano entra, somente para aqueles pd.unique do aux_df'''
 
-
-
-
-
-dic_colunas = {}
-for coluna in df_rank.columns[-(len(vars_comp)+2):-2]:
-    lista_medias = []
-
-    for index, row in df_jogs.iterrows():
-        if pd.isnull(df_jogs['Equipe atual'][index]):
-            df_aux = df_rank[(df_rank.Jogador == df_jogs.Jogador[index])&(pd.isnull(df_rank['Equipe atual']) == True)]
-        else:
-            df_aux = df_rank[(df_rank.Jogador == df_jogs.Jogador[index])&(df_rank['Equipe atual'] == df_jogs['Equipe atual'][index])]
-        lista_valores = []
-        for liga in pd.unique(df_aux.Liga):
-            for ano in pd.unique(df_aux[df_aux.Liga == liga]['Ano']):
-                aux_df = df_aux[(df_aux.Ano == ano)&(df_aux.Liga == liga)]
-                if ano == ano_min:
-                    lista_valores.append(peso_ligas[liga]*peso_min*np.nanmean(aux_df[coluna]))
-                elif ano == ano_max:
-                    lista_valores.append(peso_ligas[liga]*peso_max*np.nanmean(aux_df[coluna]))
-                    
-        media = np.nanmean(lista_valores)
-        lista_medias.append(media)
-        
-    dic_colunas[coluna] = lista_medias
-    df_jogs[coluna] = dic_colunas[coluna]
-
-
-df_jogs['Media'] = df_jogs[vars_comp].mean(axis=1)
-df_jogs['SD'] = df_jogs[vars_comp].std(axis=1)                 
-
-df_jogs = df_jogs.dropna(subset=['Media'])
-df_jogs['Media'] = df_jogs['Media'].astype('float')
-
-
-df_show = df_jogs[['Jogador','Posição','Equipe atual']]
-
-for coluna in df_jogs.columns[-(len(vars_select)+3):-2]:
-    df_show[coluna] = ""
-    for index, row in df_show.iterrows():
-        aux_df = base[(base.Jogador == df_show.Jogador[index])&(base['Equipe atual']==df_show['Equipe atual'][index])]
-        if coluna in vars_abs:
-            soma = np.nansum(aux_df[coluna])
-        else:
-            soma = np.nanmean(aux_df[coluna])
-        
-        df_show[coluna][index] = soma
-        
-df_show['Media'] = df_jogs['Media']
-df_show['SD'] = df_jogs['SD']
-
-df_show = df_show.assign(Nota = df_show.Media * df_show.Minutos)
-df_show = df_show.sort_values(by='Nota',ascending = False)
-df_show = df_show.assign(Ranking = range(1,len(df_show)+1))
-
-''' fazer o print na tela da tabela do rankking, na ordem ranking, jogador, equipe, nota, variaveis'''
 
 lista_show = ['Ranking','Nota','Jogador','Posição','Equipe atual','Minutos']
 lista_show.extend(vars_select)
 st.write(df_show[lista_show])
-
 
 
 def _invert(x, limits):
@@ -242,12 +241,12 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca1]['Equipe atual']))>1:
   clube1 = st.text_input("Clube do primeiro jogador:")
   base1 = df_show[(df_show.Jogador==nome_busca1)&(df_show["Equipe atual"] == clube1)]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base1[['Jogador','Equipe atual','Minutos']])
+  st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
   base1 = df_show[df_show.Jogador == nome_busca1]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base1[['Jogador','Equipe atual','Minutos']])
+  st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
 
 
 
@@ -263,12 +262,12 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca2]['Equipe atual']))>1:
   clube2 = st.text_input("Clube do segundo jogador:")
   base2 = df_show[(df_show.Jogador==nome_busca2)&(df_show["Equipe atual"] == clube2)]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base2[['Jogador','Equipe atual','Minutos']])
+  st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
   base2 = df_show[df_show.Jogador == nome_busca2]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base2[['Jogador','Equipe atual','Minutos']])
+  st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
 
 
 
