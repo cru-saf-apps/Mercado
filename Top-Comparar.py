@@ -159,8 +159,9 @@ df_show = df_show.assign(Ranking = range(1,len(df_show)+1))
 
 ''' fazer o print na tela da tabela do rankking, na ordem ranking, jogador, equipe, nota, variaveis'''
 
-
-st.write(df_show)
+lista_show = ['Ranking','Nota','Jogador','Posição','Equipe atual','Minutos']
+lista_show.extend(vars_select)
+st.write(df_show[lista_show])
 
 
 
@@ -230,13 +231,46 @@ class ComplexRadar():
 
 
         
-jog1 = 'Edu'
+nome_busca1 = st.text_input("Nome do primeiro jogador:")
 
-jog2 = 'G. Cano'
+if len(df_show[df_show.Jogador==nome_busca1]) == 0:
+  st.write("Favor inserir o nome do jogador igual no WyScout")
+
+elif len(pd.unique(df_show[df_show.Jogador==nome_busca1]['Equipe atual']))>1:
+  st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
+  st.write(df_show[df_show.Jogador==nome_busca1][['Jogador','Equipe no ano','Minutos']])
+  clube1 = st.text_input("Clube do primeiro jogador:")
+  base1 = df_show[(df_show.Jogador==nome_busca1)&(df_show["Equipe atual"] == clube1)]
+  st.write("Tabela resumo do jogador desejado:")
+  st.write(base1[['Jogador','Equipe atual','Minutos','Ano']])
+    
+else:
+  base1 = df_show[df_show.Jogador == nome_busca1]
+  st.write("Tabela resumo do jogador desejado:")
+  st.write(base1[['Jogador','Equipe atual','Minutos','Ano']])
 
 
-base1 = df_show[df_show.Jogador == jog1]
-base2 = df_show[df_show.Jogador == jog2]
+
+
+nome_busca2 = st.text_input("Nome do segundo jogador:")
+
+if len(df_show[df_show.Jogador==nome_busca2]) == 0:
+  st.write("Favor inserir o nome do jogador igual no WyScout")
+
+elif len(pd.unique(df_show[df_show.Jogador==nome_busca2]['Equipe atual']))>1:
+  st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
+  st.write(df_show[df_show.Jogador==nome_busca2][['Jogador','Equipe no ano','Minutos']])
+  clube2 = st.text_input("Clube do segundo jogador:")
+  base2 = df_show[(df_show.Jogador==nome_busca2)&(df_show["Equipe atual"] == clube2)]
+  st.write("Tabela resumo do jogador desejado:")
+  st.write(base2[['Jogador','Equipe atual','Minutos','Ano']])
+    
+else:
+  base2 = df_show[df_show.Jogador == nome_busca2]
+  st.write("Tabela resumo do jogador desejado:")
+  st.write(base2[['Jogador','Equipe atual','Minutos','Ano']])
+
+
 
 df = pd.concat([base1,base2])
 
@@ -262,3 +296,5 @@ for jog in df.Ranking:
     radar.plot(lista_valores,label=nome+" ("+str(jog)+")")
 
 fig.legend()
+
+st.pyplot(fig)
