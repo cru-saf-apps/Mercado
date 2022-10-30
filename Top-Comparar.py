@@ -162,7 +162,7 @@ df_show = gen_df_show_pronto(df_jogs,vars_select)
 
 lista_show = ['Ranking','Nota','Jogador','Posição','Equipe atual','Minutos']
 lista_show.extend(vars_select)
-st.write(lista_show)
+
 st.write(df_show[lista_show])
 
 
