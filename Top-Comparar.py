@@ -309,12 +309,12 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca1]['Equipe atual']))>1:
   st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
   st.write(df_show[df_show.Jogador==nome_busca1][['Ranking','Jogador','Equipe atual','Minutos']])
   clube1 = st.text_input("Clube do primeiro jogador:")
-  base1 = df_show[(df_show.Jogador==nome_busca1)&(df_show["Equipe atual"] == clube1)]
+  df1 = df_show[(df_show.Jogador==nome_busca1)&(df_show["Equipe atual"] == clube1)]
   st.write("Tabela resumo do jogador desejado:")
   st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
-  base1 = df_show[df_show.Jogador == nome_busca1]
+  df1 = df_show[df_show.Jogador == nome_busca1]
   st.write("Tabela resumo do jogador desejado:")
   st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
 
@@ -330,18 +330,18 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca2]['Equipe atual']))>1:
   st.write("Mais de um jogador disponível com este nome, favor inserir o clube atual do jogador desejado.")
   st.write(df_show[df_show.Jogador==nome_busca2][['Ranking','Jogador','Equipe atual','Minutos']])
   clube2 = st.text_input("Clube do segundo jogador:")
-  base2 = df_show[(df_show.Jogador==nome_busca2)&(df_show["Equipe atual"] == clube2)]
+  df2 = df_show[(df_show.Jogador==nome_busca2)&(df_show["Equipe atual"] == clube2)]
   st.write("Tabela resumo do jogador desejado:")
   st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
-  base2 = df_show[df_show.Jogador == nome_busca2]
+  df2 = df_show[df_show.Jogador == nome_busca2]
   st.write("Tabela resumo do jogador desejado:")
   st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
 
 
 
-df = pd.concat([base1,base2])
+df = pd.concat([df1,df2])
 
 
 lista_ranges = []
