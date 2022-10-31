@@ -73,11 +73,27 @@ dic_posicoes = {'Goleiro':['GK'],
                'Segundo Atacante': ['CF', 'AMF']}
 
 pos_select = st.multiselect('Quais posições entram no ranking?',options=posicoes)
-vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
+
 
 lista_pos_select = []
 for item in pos_select:
     lista_pos_select.append(item)
+
+    
+lista_selec = []
+for coluna in base.columns.tolist():
+  if coluna not in vars_info:
+    if coluna != 'Minutos':
+      lista_selec.append(coluna)    
+
+vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
+
+vars_comp = ['Minutos']
+vars_comp.extend(vars_select)
+
+var = vars_info.copy()
+var.extend(vars_comp)
+
 
 ''' começo da criação da base de dados a ser usada para ranking'''
 '''precisa diferenciar por liga'''
@@ -103,12 +119,6 @@ def gen_base2(base):
         
         
 base2 = gen_base2(base)
-        
-lista_selec = []
-for coluna in base2.columns.tolist():
-  if coluna not in vars_info:
-    if coluna != 'Minutos':
-      lista_selec.append(coluna)
 
 
 @st.cache
@@ -141,11 +151,7 @@ base2 = base2_pos(base2, lista_pos_select)
 
 st.write(base2)
 
-vars_comp = ['Minutos']
-vars_comp.extend(vars_select)
 
-var = vars_info.copy()
-var.extend(vars_comp)
 
 df_rank = base2[var].copy()
 
