@@ -11,7 +11,7 @@ lista_anos = ['2020','2021']
 
 lista_ligas = ['BRA1','BRA2','ARG1']
 
-peso_ligas = {'BRA1':1, 'BRA2':0.8,'ARG1':0.9}
+peso_ligas = {'BRA1':1, 'BRA2':0.5,'ARG1':0.9}
 
 @st.cache
 def gen_base(lista_anos, lista_ligas):
@@ -53,7 +53,7 @@ vars_abs = ['Minutos','Golos','Golos esperados','Assistências','Assistências e
 ano_min = min(base.Ano)
 ano_max = max(base.Ano)
 
-peso_min = 0.4
+peso_min = 0.25
 peso_max = (1-peso_min)
 
 posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
