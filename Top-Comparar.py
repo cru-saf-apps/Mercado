@@ -73,6 +73,7 @@ dic_posicoes = {'Goleiro':['GK'],
                'Segundo Atacante': ['CF', 'AMF']}
 
 pos_select = st.multiselect('Quais posições entram no ranking?',options=posicoes)
+vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
 
 lista_pos_select = []
 for item in pos_select:
@@ -141,7 +142,6 @@ base2 = base2_pos(base2, lista_pos_select)
 st.write(base2)
 
 vars_comp = ['Minutos']
-vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
 vars_comp.extend(vars_select)
 
 var = vars_info.copy()
