@@ -48,7 +48,7 @@ ano_max = max(base.Ano)
 peso_min = 0.4
 peso_max = (1-peso_min)
 
-posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
+'''posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
             'Médio Box to Box', 'Médio Ofensivo', 'Meia', 'Extremo Direito',
             'Extremo Esquerdo', 'Centroavante', 'Segundo Atacante']
 
@@ -70,7 +70,7 @@ pos_select = st.multiselect('Quais posições entram no ranking?',options=posico
 
 lista_pos_select = []
 for item in pos_select:
-    lista_pos_select.append(item)
+    lista_pos_select.append(item)'''
 
 ''' começo da criação da base de dados a ser usada para ranking'''
 '''precisa diferenciar por liga'''
@@ -91,7 +91,7 @@ for liga in pd.unique(base.Liga):
         base2 = pd.concat([base2,base_ano])
         
         
-t = 0
+'''t = 0
 while t < len(base2):
     for pos in lista_pos_select:
         cont = 0
@@ -105,7 +105,7 @@ while t < len(base2):
             base2 = base2.drop(t)
         t += 1
     
-base2 = base2.reset_index(drop=True)
+base2 = base2.reset_index(drop=True)'''
         
 lista_selec = []
 for coluna in base2.columns.tolist():
