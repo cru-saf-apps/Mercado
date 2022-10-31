@@ -102,7 +102,7 @@ while t < len(base2):
             df_resumo = df_resumo.drop(t)
         t += 1
     
-df_resumo = df_resumo.reset_index(drop=True)
+base2 = base2.reset_index(drop=True)
         
 lista_selec = []
 for coluna in base2.columns.tolist():
