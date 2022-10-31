@@ -93,13 +93,13 @@ while t < len(base2):
     for pos in pos_select:
         cont = 0
         for item in dic_posicoes[pos]:
-            if item in df_resumo['Posição'][t]:
+            if item in base2['Posição'][t]:
                 cont = 1
                 continue
             else:
                 continue
         if cont == 0:
-            df_resumo = df_resumo.drop(t)
+            base2 = base2.drop(t)
         t += 1
     
 base2 = base2.reset_index(drop=True)
