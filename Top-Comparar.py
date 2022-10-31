@@ -112,24 +112,28 @@ for coluna in base2.columns.tolist():
 
 @st.cache
 def base2_pos(base2, lista_pos_select):
+    lista_posicoes = []
+    for pos in lista_pos_select:
+        lista_posicoes.extend(dic_posicoes[pos])
+    lista_posicoes = list(set(lista_posicoes))
     t = 0
     while t < len(base2):
-        for pos in lista_pos_select:
-            cont = 0
-            for item in dic_posicoes[pos]:
-                if cont != 1:
-                    if item in base2['Posição'][t]:
-                        cont = 1
-                        continue
-                    else:
-                        continue
-                else:
+        lista_teste = []
+        for pos in base2['Posição'][t].split(','):
+            lista_teste.append(pos.strip())
+        cont = 0
+        for item in lista_teste:
+            if cont != 1:
+                if item in lista_posicoes:
+                    cont = 1
                     continue
-            if cont == 0:
-                base2 = base2.drop(t)
+            else:
+                continue
+        if cont == 0:
+            base2 = base2.drop(t)
+            base2 = base2.reset_index(drop = True)
+        else:
             t += 1
-
-    base2 = base2.reset_index(drop=True)  
     return base2
 
 base2 = base2_pos(base2, lista_pos_select)
