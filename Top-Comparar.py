@@ -48,8 +48,25 @@ ano_max = max(base.Ano)
 peso_min = 0.4
 peso_max = (1-peso_min)
 
+posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
+            'Médio Box to Box', 'Médio Ofensivo', 'Meia', 'Extremo Direito',
+            'Extremo Esquerdo', 'Centroavante', 'Segundo Atacante']
 
 
+dic_posicoes = {'Goleiro':['GK'],
+                'Lat. Direito':['RB'],
+                'Lat. Esquerdo':['LB'],
+                'Zagueiro': ['CB', 'RCB', 'LCB'],
+               'Médio Defensivo':['RDMF', 'LDMF', 'DMF'],
+                'Médio Box to Box':['LCMF', 'RCMF', 'CMF'],
+               'Médio Ofensivo': ['LCMF', 'RCMF', 'CMF', 'AMF', 'RAMF', 'LAMF'],
+                'Meia': ['AMF', 'RAMF', 'LAMF'],
+               'Extremo Direito': ['RW', 'RAMF', 'RWF'],
+               'Extremo Esquerdo': ['LW', 'LAMF', 'LWF'],
+               'Centroavante': ['CF'],
+               'Segundo Atacante': ['CF', 'AMF']}
+
+pos_select = st.multiselect('Quais posições entram no ranking?',options=posicoes)
 
 
 ''' começo da criação da base de dados a ser usada para ranking'''
@@ -69,7 +86,23 @@ for liga in pd.unique(base.Liga):
                 base_ano[coluna] = base_ano[coluna]
                 
         base2 = pd.concat([base2,base_ano])
-
+        
+        
+t = 0
+while t < len(base2):
+    for pos in pos_select:
+        cont = 0
+        for item in dic_posicoes[pos]:
+            if item in df_resumo['Posição'][t]:
+                cont = 1
+                continue
+            else:
+                continue
+        if cont == 0:
+            df_resumo = df_resumo.drop(t)
+        t += 1
+    
+df_resumo = df_resumo.reset_index(drop=True)
         
 lista_selec = []
 for coluna in base2.columns.tolist():
