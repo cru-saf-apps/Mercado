@@ -9,9 +9,9 @@ from matplotlib import pyplot as plt
 
 lista_anos = ['2020','2021']
 
-lista_ligas = ['BRA1','BRA2']
+lista_ligas = ['BRA1','BRA2','ARG1']
 
-peso_ligas = {'BRA1':1, 'BRA2':0.8}
+peso_ligas = {'BRA1':1, 'BRA2':0.8,'ARG1':0.9}
 
 @st.cache
 def gen_base(lista_anos, lista_ligas):
