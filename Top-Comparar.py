@@ -27,6 +27,8 @@ def gen_base(lista_anos, lista_ligas):
 
     base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano",
                                 "Equipa":"Equipe atual","Minutos jogados:":"Minutos"})
+    
+    base = base.dropna(subset=['Posição'])
     base = base.reset_index(drop=True)        
 
     cols_base = base.columns[-2:].tolist()
