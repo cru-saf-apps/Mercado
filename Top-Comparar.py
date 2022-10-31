@@ -13,24 +13,30 @@ lista_ligas = ['BRA1','BRA2']
 
 peso_ligas = {'BRA1':1, 'BRA2':0.8}
 
-base = pd.DataFrame()
-for liga in lista_ligas:
-    for ano in lista_anos:
-        for num in range(1,3):
-            arquivo = liga+'-'+str(ano)+'-'+str(num)+'.csv'
-            df = pd.read_csv(arquivo,sep=';',decimal=',')
-            df['Ano'] = int(ano)
-            df['Liga'] = liga
-            base = pd.concat([base,df]).drop_duplicates().reset_index(drop=True)
-            
-base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano",
-                            "Equipa":"Equipe atual","Minutos jogados:":"Minutos"})
-base = base.reset_index(drop=True)        
+@st.cache
+def gen_base(lista_anos, lista_ligas):
+    base = pd.DataFrame()
+    for liga in lista_ligas:
+        for ano in lista_anos:
+            for num in range(1,3):
+                arquivo = liga+'-'+str(ano)+'-'+str(num)+'.csv'
+                df = pd.read_csv(arquivo,sep=';',decimal=',')
+                df['Ano'] = int(ano)
+                df['Liga'] = liga
+                base = pd.concat([base,df]).drop_duplicates().reset_index(drop=True)
 
-cols_base = base.columns[-2:].tolist()
-for item in base.columns[:-2].tolist():
-    cols_base.append(item)
-base = base[cols_base]
+    base = base.rename(columns={"Equipa dentro de um período de tempo seleccionado":"Equipe no ano",
+                                "Equipa":"Equipe atual","Minutos jogados:":"Minutos"})
+    base = base.reset_index(drop=True)        
+
+    cols_base = base.columns[-2:].tolist()
+    for item in base.columns[:-2].tolist():
+        cols_base.append(item)
+    base = base[cols_base]
+    
+    return base
+
+base = gen_base(lista_anos, lista_ligas)
 
 vars_info = ['Ano','Liga','Jogador','Equipe atual','Equipe no ano','Posição','Idade','Valor de mercado',
              'Contrato termina','Naturalidade','País de nacionalidade','Pé','Altura','Peso','Emprestado']
@@ -48,7 +54,7 @@ ano_max = max(base.Ano)
 peso_min = 0.4
 peso_max = (1-peso_min)
 
-'''posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
+posicoes = ['Goleiro', 'Lat. Direito', 'Lat. Esquerdo', 'Zagueiro', 'Médio Defensivo', 
             'Médio Box to Box', 'Médio Ofensivo', 'Meia', 'Extremo Direito',
             'Extremo Esquerdo', 'Centroavante', 'Segundo Atacante']
 
@@ -70,42 +76,32 @@ pos_select = st.multiselect('Quais posições entram no ranking?',options=posico
 
 lista_pos_select = []
 for item in pos_select:
-    lista_pos_select.append(item)'''
+    lista_pos_select.append(item)
 
 ''' começo da criação da base de dados a ser usada para ranking'''
 '''precisa diferenciar por liga'''
 
-base2 = pd.DataFrame()
+@st.cache
+def gen_base2(base):
+    base2 = pd.DataFrame()
 
-for liga in pd.unique(base.Liga):
-    base_liga = base[base.Liga == liga]
-    for ano in pd.unique(base_liga.Ano):
-        base_ano = base_liga[base_liga.Ano == ano]
+    for liga in pd.unique(base.Liga):
+        base_liga = base[base.Liga == liga]
+        for ano in pd.unique(base_liga.Ano):
+            base_ano = base_liga[base_liga.Ano == ano]
+
+            for coluna in base_ano.columns.tolist():
+                if coluna not in vars_info:
+                    base_ano[coluna] = (base_ano[coluna]-np.nanmin(base_ano[coluna]))/(np.nanmax(base_ano[coluna])-np.nanmin(base_ano[coluna]))
+                else:
+                    base_ano[coluna] = base_ano[coluna]
+
+            base2 = pd.concat([base2,base_ano])
+            
+    return base2
         
-        for coluna in base_ano.columns.tolist():
-            if coluna not in vars_info:
-                base_ano[coluna] = (base_ano[coluna]-np.nanmin(base_ano[coluna]))/(np.nanmax(base_ano[coluna])-np.nanmin(base_ano[coluna]))
-            else:
-                base_ano[coluna] = base_ano[coluna]
-                
-        base2 = pd.concat([base2,base_ano])
         
-        
-'''t = 0
-while t < len(base2):
-    for pos in lista_pos_select:
-        cont = 0
-        for item in dic_posicoes[pos]:
-            if item in base2['Posição'][t]:
-                cont = 1
-                continue
-            else:
-                continue
-        if cont == 0:
-            base2 = base2.drop(t)
-        t += 1
-    
-base2 = base2.reset_index(drop=True)'''
+base2 = gen_base2(base)
         
 lista_selec = []
 for coluna in base2.columns.tolist():
@@ -113,7 +109,29 @@ for coluna in base2.columns.tolist():
     if coluna != 'Minutos':
       lista_selec.append(coluna)
 
-    
+
+@st.cache
+def base2_pos(base2, lista_pos_select):
+    t = 0
+    while t < len(base2):
+        for pos in lista_pos_select:
+            cont = 0
+            for item in dic_posicoes[pos]:
+                if item in base2['Posição'][t]:
+                    cont = 1
+                    continue
+                else:
+                    continue
+            if cont == 0:
+                base2 = base2.drop(t)
+            t += 1
+
+    base2 = base2.reset_index(drop=True)  
+    return base2
+
+base2 = base2_pos(base2, lista_pos_select)
+
+
 vars_comp = ['Minutos']
 vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
 vars_comp.extend(vars_select)
