@@ -68,6 +68,9 @@ dic_posicoes = {'Goleiro':['GK'],
 
 pos_select = st.multiselect('Quais posições entram no ranking?',options=posicoes)
 
+lista_pos_select = []
+for item in pos_select:
+    lista_pos_select.append(item)
 
 ''' começo da criação da base de dados a ser usada para ranking'''
 '''precisa diferenciar por liga'''
@@ -90,7 +93,7 @@ for liga in pd.unique(base.Liga):
         
 t = 0
 while t < len(base2):
-    for pos in pos_select:
+    for pos in lista_pos_select:
         cont = 0
         for item in dic_posicoes[pos]:
             if item in base2['Posição'][t]:
