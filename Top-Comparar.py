@@ -313,12 +313,12 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca1]['Equipe atual']))>1:
   clube1 = st.text_input("Clube do primeiro jogador:")
   df1 = df_show[(df_show.Jogador==nome_busca1)&(df_show["Equipe atual"] == clube1)]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
+  st.write(df1[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
   df1 = df_show[df_show.Jogador == nome_busca1]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base1[['Ranking','Jogador','Equipe atual','Minutos']])
+  st.write(df1[['Ranking','Jogador','Equipe atual','Minutos']])
 
 
 
@@ -334,12 +334,12 @@ elif len(pd.unique(df_show[df_show.Jogador==nome_busca2]['Equipe atual']))>1:
   clube2 = st.text_input("Clube do segundo jogador:")
   df2 = df_show[(df_show.Jogador==nome_busca2)&(df_show["Equipe atual"] == clube2)]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
+  st.write(df2[['Ranking','Jogador','Equipe atual','Minutos']])
     
 else:
   df2 = df_show[df_show.Jogador == nome_busca2]
   st.write("Tabela resumo do jogador desejado:")
-  st.write(base2[['Ranking','Jogador','Equipe atual','Minutos']])
+  st.write(df2[['Ranking','Jogador','Equipe atual','Minutos']])
 
 
 
