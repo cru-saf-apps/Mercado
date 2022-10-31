@@ -117,9 +117,12 @@ def base2_pos(base2, lista_pos_select):
         for pos in lista_pos_select:
             cont = 0
             for item in dic_posicoes[pos]:
-                if item in base2['Posição'][t]:
-                    cont = 1
-                    continue
+                if cont != 1:
+                    if item in base2['Posição'][t]:
+                        cont = 1
+                        continue
+                    else:
+                        continue
                 else:
                     continue
             if cont == 0:
@@ -131,6 +134,7 @@ def base2_pos(base2, lista_pos_select):
 
 base2 = base2_pos(base2, lista_pos_select)
 
+st.write(base2)
 
 vars_comp = ['Minutos']
 vars_select = st.multiselect("Selecione variáveis para definição de ranking",options=lista_selec)
